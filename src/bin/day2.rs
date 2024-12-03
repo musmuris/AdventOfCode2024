@@ -34,8 +34,7 @@ pub fn day2(input: &str) -> (usize, usize) {
             }
         }        
     }
-
-    
+        
     (safe as usize, safed as usize)
 }
 
