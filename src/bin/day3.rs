@@ -3,22 +3,31 @@ use regex::Regex;
 const INPUT: &str = include_str!("inputs/day3.txt");
 
 pub fn day3(input: &str) -> (usize, usize) {
-    let regex = Regex::new(r"mul\((\d\d?\d?),(\d\d?\d?)\)").unwrap();
+    let regex = Regex::new(r"(do\(\)|(don't\(\)))|mul\((\d\d?\d?),(\d\d?\d?)\)").unwrap();
 
-    let mut acc = 0;
-    for (_, [num1, num2]) in regex.captures_iter(input).map(|c| c.extract()) {
-        acc += num1.parse::<i32>().unwrap() * num2.parse::<i32>().unwrap();
-        
+    let mut acc1 = 0;
+    let mut acc2 = 0;
+    let mut doit = true;
+    for a in regex.captures_iter(input) {
+        if &a[0] == "do()" {
+            doit = true;
+        } else if &a[0] == "don't()" {
+            doit = false;
+        }
+        else {
+            let m = &a[3].parse::<i32>().unwrap() * &a[4].parse::<i32>().unwrap();
+            acc1 += m;
+            if doit {
+                acc2 += m;
+            }
+        }     
     }
-    (acc as usize, input.len())
+    (acc1 as usize, acc2 as usize)
 }
 
-fn main() {
-    let input = include_str!("inputs/day3.test2.txt");
-    let (p1, p2) = day3(input);
-    
-    // let (p1, p2) = day3(INPUT);
-    // println!("{}\n{}", p1, p2);
+fn main() {        
+    let (p1, p2) = day3(INPUT);
+    println!("{}\n{}", p1, p2);
 }
 
 #[cfg(test)]
@@ -31,7 +40,7 @@ mod tests {
         let (p1, p2) = day3(input);
 
         assert_eq!(p1, 161);
-        assert_eq!(p2, input.len());
+        assert_eq!(p2, 161);
     }
 
     #[test]
@@ -40,15 +49,15 @@ mod tests {
         let (p1, p2) = day3(input);
 
         assert_eq!(p1, 161);
-        assert_eq!(p2, input.len());
+        assert_eq!(p2, 48);
     }
 
 
-    // //#[test]
-    // fn test_main() {
-    //     let (p1, p2) = day3(INPUT);
+    #[test]
+    fn test_main() {
+        let (p1, p2) = day3(INPUT);
 
-    //     assert_eq!(p1, 170778545);
-    //     assert_eq!(p2, INPUT.len());
-    // }
+        assert_eq!(p1, 170778545);
+        assert_eq!(p2, 82868252);
+    }
 }
