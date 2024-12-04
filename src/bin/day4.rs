@@ -3,6 +3,7 @@ const INPUT: &str = include_str!("inputs/day4.txt");
 fn run_search(ws: &Vec<Vec<char>>, x:i32, y:i32, dx:i32, dy:i32, n: char ) -> bool {
     let x =  x + dx;
     let y = y + dy;
+    // Argh - casting to usize all the time!!
     if x < 0 || y < 0 || (x as usize) >= ws[0].len() || (y as usize) >= ws.len() {
         return false;
     }
@@ -14,6 +15,7 @@ fn run_search(ws: &Vec<Vec<char>>, x:i32, y:i32, dx:i32, dy:i32, n: char ) -> bo
         } else if n == 'A' {
             return run_search(&ws, x, y, dx, dy, 'S');
         } else {
+            // Not sure why Rust insists I have this...
             panic!("wrong");
         }
     } else {
@@ -45,6 +47,7 @@ pub fn day4(input: &str) -> (usize, usize) {
 
     let lines:Vec<&str> = input.lines().collect();
     let mut ws:Vec<Vec<char>> = Vec::new();
+    // Sure there must be a more idiomatic way of doing this next bit
     for line in lines {
         ws.push(line.chars().collect());
     }
