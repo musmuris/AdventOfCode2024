@@ -20,12 +20,12 @@ pub fn day3(input: &str) -> (usize, usize) {
             if doit {
                 acc2 += m;
             }
-        }     
+        }
     }
     (acc1 as usize, acc2 as usize)
 }
 
-fn main() {        
+fn main() {
     let (p1, p2) = day3(INPUT);
     println!("{}\n{}", p1, p2);
 }

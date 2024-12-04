@@ -1,12 +1,12 @@
 const INPUT: &str = include_str!("inputs/day2.txt");
 
 fn is_safe(report: &Vec<i32>) -> bool {
-    let sign = (report[1] - report[0]).signum();        
+    let sign = (report[1] - report[0]).signum();
     let mut prev = report[0];
-    for num in report.iter().skip(1) {        
-        let diff = num - prev;               
+    for num in report.iter().skip(1) {
+        let diff = num - prev;
         if diff.signum() != sign || diff.abs() < 1 || diff.abs() > 3  {
-            return false;        
+            return false;
         }
         prev = *num;
     }
@@ -22,19 +22,19 @@ pub fn day2(input: &str) -> (usize, usize) {
             .split_whitespace()
             .map(|n| n.parse::<i32>().unwrap())
             .collect::<Vec<_>>();
-           
+
         if is_safe(&nums) { safe += 1; }
         for i in 0..nums.len() {
-            
+
             let mut n = nums.clone();
-            n.remove(i);                        
-            if is_safe(&n) {                 
-                safed += 1; 
+            n.remove(i);
+            if is_safe(&n) {
+                safed += 1;
                 break;
             }
-        }        
+        }
     }
-        
+
     (safe as usize, safed as usize)
 }
 

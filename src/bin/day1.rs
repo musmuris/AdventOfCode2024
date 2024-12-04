@@ -14,7 +14,7 @@ pub fn day1(input: &str) -> (usize, usize) {
             .collect::<Vec<_>>();
         left.push(nums[0]);
         right.push(nums[1]);
-        *counts.entry(nums[1]).or_insert(0) += 1;        
+        *counts.entry(nums[1]).or_insert(0) += 1;
     }
     left.sort();
     right.sort();
