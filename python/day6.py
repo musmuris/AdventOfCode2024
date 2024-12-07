@@ -29,7 +29,7 @@ def walk(themap, row, col):
             col = nextc
             row = nextr
 
-    return (visted, seen, False)
+    return (visted, False)
 
 def day6(input):
     themap = []
