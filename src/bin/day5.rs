@@ -6,7 +6,7 @@ const INPUT: &str = include_str!("inputs/day5.txt");
 
 pub fn day5(input: &str) -> (usize, usize) {
 
-    let mut rules = HashMap::<u32,HashSet::<u32>>::new();
+    let mut rules = HashMap::<u32,(HashSet::<u32>,HashSet::<u32>)>::new();
     let mut i = input.lines();
     loop {
         let line = i.next().unwrap();
@@ -16,7 +16,11 @@ pub fn day5(input: &str) -> (usize, usize) {
         let Some((first,second)) = line.split_once("|") else {panic!("No !?")};
         //after
         let set = rules.entry(first.parse::<u32>().unwrap()).or_default();
-        set.insert(second.parse::<u32>().unwrap());
+        set.0.insert(second.parse::<u32>().unwrap());
+        // before
+        let set = rules.entry(second.parse::<u32>().unwrap()).or_default();
+        set.1.insert(first.parse::<u32>().unwrap());
+
     }
 
     let mut sum = 0;
@@ -25,10 +29,10 @@ pub fn day5(input: &str) -> (usize, usize) {
         let update = line.split(",").map(|x| x.parse::<u32>().unwrap()).collect::<Vec<_>>();
         let mut sorted = update.clone();
         sorted.sort_by(|a,b| {
-            if rules[a].contains(b) {
+            if rules[a].1.contains(b) {
                 Ordering::Greater
             } else {
-                 Ordering::Less
+                Ordering::Less
             }
         });
 

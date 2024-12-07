@@ -1,26 +1,17 @@
+
 const INPUT: &str = include_str!("inputs/day4.txt");
 
-fn run_search(ws: &Vec<Vec<char>>, x:i32, y:i32, dx:i32, dy:i32, n: char ) -> bool {
-    let x =  x + dx;
-    let y = y + dy;
-    // Argh - casting to usize all the time!!
-    if x < 0 || y < 0 || (x as usize) >= ws[0].len() || (y as usize) >= ws.len() {
-        return false;
-    }
-    if ws[y as usize][x as usize] == n {
-        if n == 'S' {
-            return true;
-        } else if n == 'M' {
-            return run_search(&ws, x, y, dx, dy, 'A');
-        } else if n == 'A' {
-            return run_search(&ws, x, y, dx, dy, 'S');
-        } else {
-            // Not sure why Rust insists I have this...
-            panic!("wrong");
+fn run_search(ws: &Vec<Vec<char>>, mut x:i32, mut y:i32, dx:i32, dy:i32 ) -> bool {
+
+    for c in ['X', 'M', 'A', 'S'] {
+        if &c != ws.get(y as usize).and_then(|y| y.get(x as usize)).unwrap_or(&'_') {
+            return false;
         }
-    } else {
-        return false;
+        x = x + dx;
+        y = y + dy;
     }
+
+    true
 }
 
 fn run_search2(ws: &Vec<Vec<char>>, x:i32, y:i32 ) -> bool {
@@ -45,24 +36,18 @@ fn run_search2(ws: &Vec<Vec<char>>, x:i32, y:i32 ) -> bool {
 
 pub fn day4(input: &str) -> (usize, usize) {
 
-    let lines:Vec<&str> = input.lines().collect();
-    let mut ws:Vec<Vec<char>> = Vec::new();
-    // Sure there must be a more idiomatic way of doing this next bit
-    for line in lines {
-        ws.push(line.chars().collect());
-    }
+    let ws = input.lines().map(|s| s.chars().collect::<Vec<_>>()).collect::<Vec<_>>();
 
     let mut acc = 0;
     let mut acc2 = 0;
     for y in 0..ws.len() {
         for x in 0..ws[0].len() {
-            if ws[y][x] == 'X' {
-                for (dx,dy) in [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)] {
-                    if run_search(&ws, x as i32, y as i32, dx, dy, 'M') {
-                        acc += 1;
-                    }
+            for (dx,dy) in [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)] {
+                if run_search(&ws, x as i32, y as i32, dx, dy) {
+                    acc += 1;
                 }
             }
+
             if ws[y][x] == 'A' {
                 if run_search2(&ws, x as i32, y as i32) {
                     acc2 += 1;
