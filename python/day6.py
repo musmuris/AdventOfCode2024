@@ -4,14 +4,11 @@ def walk(themap, row, col):
     dcol = 0
     drow = -1
     dir = 0
-    visted = 1
-    seen = {}
-    themap[row][col] = 'X'
-    while True:
-        #pprint(walked)
-        if (dir,row,col) in seen:
-            return (visted, True)
-        seen[(dir,row,col)] = True
+    seen = {}    
+    while True:        
+        if (row,col,dir) in seen:
+            return (set(), True)
+        seen[(row,col,dir)] = True
         (nextr,nextc) = (row+drow, col+dcol)
         if not ( nextr in range(len(themap)) and nextc in range(len(themap[0])) ):
             break
@@ -22,14 +19,12 @@ def walk(themap, row, col):
                 case 1 : (dcol,drow) = (1,0)
                 case 2 : (dcol,drow) = (0,1)
                 case 3 : (dcol,drow) = (-1,0)
-        else:
-            if themap[nextr][nextc] != "X":
-                visted += 1
-                themap[nextr][nextc] = "X"
+        else:            
             col = nextc
             row = nextr
 
-    return (visted, False)
+    visited = [(r,c) for (r,c,d) in seen]
+    return (set(visited), False)
 
 def day6(input):
     themap = []
@@ -38,21 +33,19 @@ def day6(input):
         themap.append(list(irow))
         if '^' in irow:
             row = i
-            col = irow.index('^')
+            col = irow.index('^')            
     themap[row][col] = '.'
+
     loops = 0
-    mapcopy = [row[:] for row in themap]
-    (result1, _) = walk(mapcopy, row, col)
-    for orow in range(len(themap)):
-        for ocol in range(len(themap[0])):
-            if themap[orow][ocol] == ".":
-                mapcopy = [l[:] for l in themap]
-                mapcopy[orow][ocol] = "#"
-                #pprint(mapcopy)
-                (_, looped) = walk(mapcopy, row, col)
-                if looped:
-                    loops += 1
-    print(result1,loops)
+        
+    (result1, _) = walk(themap, row, col)
+    for (r,c) in result1:        
+        themap[r][c] = '#'
+        (_, looped) = walk(themap, row, col)
+        themap[r][c] = '.'
+        if looped:
+            loops += 1
+    print(len(result1),loops)
 
 
 #41, 6
