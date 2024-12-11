@@ -10,12 +10,12 @@ fn walkpos( p:(usize,usize), d: usize) -> (usize, usize) {
 }
 
 fn walk(map: &Vec<Vec<u8>>, mut pos: (usize, usize)) -> (HashSet<(usize,usize)>, bool) {
-    let mut seen = HashSet::new();    
+    let mut seen = HashSet::new();
     let mut dir = 0;
     loop {
         if seen.contains(&(pos.0,pos.1,dir)) {
             return (HashSet::new(), true);
-        }        
+        }
         seen.insert((pos.0, pos.1, dir));
 
         let npos = walkpos(pos, dir);
@@ -25,7 +25,7 @@ fn walk(map: &Vec<Vec<u8>>, mut pos: (usize, usize)) -> (HashSet<(usize,usize)>,
                 dir = (dir + 1) % 4;
             } else {
                 pos = npos;
-            }            
+            }
         } else {
             return (seen.iter().map(|(r,c,_)| (*r,*c) ).collect(), false);
         }
@@ -41,7 +41,7 @@ fn day6(input: &str) -> (usize, usize) {
            if map[r][c]  == b'^' {
                 map[r][c] = b'.';
                 pos = (r,c);
-            }        
+            }
         }
     }
 
