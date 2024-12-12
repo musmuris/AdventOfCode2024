@@ -3,7 +3,7 @@ use regex::Regex;
 const INPUT: &str = include_str!("inputs/day3.txt");
 
 pub fn day3(input: &str) -> (usize, usize) {
-    let regex = Regex::new(r"(do\(\)|(don't\(\)))|mul\((\d\d?\d?),(\d\d?\d?)\)").unwrap();
+    let regex = Regex::new(r"(do\(\)|(don't\(\)))|mul\((\d+),(\d+)\)").unwrap();
 
     let mut acc1 = 0;
     let mut acc2 = 0;
