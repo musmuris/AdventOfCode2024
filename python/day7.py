@@ -26,8 +26,8 @@ def ternary(num, l):
         return memoize[(num,l)]
     digits = [0]*l
     for i in range(l):
-        (num,r) = divmod(num,3)        
-        digits[i] = r        
+        (num,r) = divmod(num,3)
+        digits[i] = r
     res = ''.join(str(x) for x in reversed(digits))
     memoize[(n,l)] = res
     return res
