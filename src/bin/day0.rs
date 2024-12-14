@@ -1,6 +1,6 @@
 const INPUT: &str = include_str!("inputs/day0.txt");
 
-pub fn day0(input: &str) -> (usize, usize) {
+fn day0(input: &str) -> (usize, usize) {
     (input.len(), input.len())
 }
 
