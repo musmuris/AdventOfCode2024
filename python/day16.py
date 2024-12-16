@@ -15,16 +15,23 @@ def print_maze(maze, routes):
 
 def path_find(maze, start, end):
     priQ = []
-    heapq.heappush(priQ, (0 , start, (0,1)))
+    initial_route = set()
+    initial_route.add(start)
+    heapq.heappush(priQ, (0 , start, (0,1), initial_route ))
     costs = {}
     routes = {}
     costs[start] = 0
-    routes[start] = set()
-    routes[start].add(start)
+    routes = []
+    min_cost = 1000000000
 
+    s = 0
     while len(priQ) > 0:
+        s += 1
+        
         current = heapq.heappop(priQ)
-        old_cost, (r,c),old_dcost = current
+        old_cost, (r,c),old_dcost, route = current
+        if s % 5000 == 0: 
+            print(f"{len(priQ)} {len(route)}")
 
         for dr,dc in paths:
             nr,nc = r+dr, c+dc
@@ -34,23 +41,29 @@ def path_find(maze, start, end):
             if (dr,dc) != old_dcost:
                 dcost += 1000
             loc = (nr,nc)
-            new_cost = costs[(r,c)] + dcost
-            if loc not in costs or new_cost <= costs[loc]:
-                update_routes = loc not in costs or new_cost == costs[loc]
-                costs[loc] = new_cost
-                if update_routes:
-                    if loc not in routes:
-                        routes[loc] = set(routes[(r,c)])
-                    else:
-                        routes[loc].update(routes[(r,c)])
-                else:
-                    routes[loc] = set(routes[(r,c)])
-                routes[loc].add(loc)
-                heapq.heappush(priQ, (new_cost, loc, (dr,dc)))
-    pprint(len(routes[end]))
-    print_maze(maze, routes[end])
-    pprint(routes[end])
-    return costs[end]
+            if loc in route: # don't backtrack
+                continue
+            new_route = set(route)
+            new_route.add(loc)
+            new_cost = old_cost + dcost
+            if loc == end:
+                if new_cost < min_cost:
+                    min_cost = new_cost
+                routes.append((new_cost, new_route))
+                break # found end
+            if new_cost > min_cost:
+                continue # already found better path
+
+            if (loc,dr,dc) not in costs or new_cost <= costs[(loc,dr,dc)]:
+                costs[(loc,dr,dc)] = new_cost
+                heapq.heappush(priQ, (new_cost, loc, (dr,dc), new_route))
+
+    points = set()
+    for r in routes:
+        if r[0] == min_cost:
+            points.update(r[1])
+    print_maze(maze, points)
+    return (min_cost, len(points))
 
 def day16(input):
     maze = [[p for p in line] for line in input]
@@ -66,17 +79,15 @@ def day16(input):
     return acc1
 
 
-# input = open("src/bin/inputs/day16.test1.txt", "r").read().splitlines()
-# pprint(day16(input))
-
-input = open("src/bin/inputs/day16.test3.txt", "r").read().splitlines()
+input = open("src/bin/inputs/day16.test1.txt", "r").read().splitlines()
 pprint(day16(input))
 
 
+input = open("src/bin/inputs/day16.test2.txt", "r").read().splitlines()
+pprint(day16(input))
 
-# input = open("src/bin/inputs/day16.test2.txt", "r").read().splitlines()
+# input = open("src/bin/inputs/day16.test3.txt", "r").read().splitlines()
 # pprint(day16(input))
 
-
-# input = open("src/bin/inputs/day16.txt", "r").read().splitlines()
-# pprint(day16(input))
+input = open("src/bin/inputs/day16.txt", "r").read().splitlines()
+pprint(day16(input))
