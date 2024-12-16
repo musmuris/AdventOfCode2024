@@ -24,14 +24,9 @@ def path_find(maze, start, end):
     routes = []
     min_cost = 1000000000
 
-    s = 0
     while len(priQ) > 0:
-        s += 1
-        
         current = heapq.heappop(priQ)
         old_cost, (r,c),old_dcost, route = current
-        if s % 5000 == 0: 
-            print(f"{len(priQ)} {len(route)}")
 
         for dr,dc in paths:
             nr,nc = r+dr, c+dc
